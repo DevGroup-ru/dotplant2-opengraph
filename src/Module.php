@@ -50,45 +50,62 @@ class Module extends ExtensionModule implements BootstrapInterface
         $app->on(
             Application::EVENT_BEFORE_ACTION,
             function () use ($app) {
-                if ($app->requestedAction->controller instanceof app\modules\page\backend\PageController) {
-                    BackendEntityEditEvent::on(
-                        app\modules\page\backend\PageController::className(),
-                        'backend-page-edit-save',
-                        [$this, 'saveHandler']
-                    );
-                    BackendEntityEditFormEvent::on(
-                        View::className(),
-                        'backend-page-edit-form',
-                        [$this, 'renderEditForm']);
-                } elseif ($app->requestedAction->controller instanceof app\modules\shop\controllers\BackendProductController) {
-                    BackendEntityEditEvent::on(
-                        app\modules\shop\controllers\BackendProductController::className(),
-                        'backend-product-edit-save',
-                        [$this, 'saveHandler']
-                    );
-                    BackendEntityEditFormEvent::on(
-                        View::className(),
-                        'backend-product-edit-form',
-                        [$this, 'renderEditForm']);
-                } elseif (
-                    $app->requestedAction->controller instanceof app\modules\shop\controllers\ProductController &&
-                    $app->requestedAction->id == 'show'
-                ) {
-                    ViewEvent::on(
-                        app\modules\shop\controllers\ProductController::className(),
-                        app\modules\shop\controllers\ProductController::EVENT_PRE_DECORATOR,
-                        [$this, 'registerMeta']
-                    );
-                } elseif (
-                    $app->requestedAction->controller instanceof app\modules\page\controllers\PageController &&
-                    $app->requestedAction->id == 'show'
-                ) {
-                    ViewEvent::on(
-                        app\modules\page\controllers\PageController::className(),
-                        app\modules\page\controllers\PageController::EVENT_PRE_DECORATOR,
-                        [$this, 'registerMeta']
-                    );
+
+                if ($app->requestedAction->controller instanceof \app\backend\components\BackendController) {
+                    if ($app->requestedAction->controller instanceof app\modules\page\backend\PageController) {
+                        BackendEntityEditEvent::on(
+                            app\modules\page\backend\PageController::className(),
+                            'backend-page-edit-save',
+                            [$this, 'saveHandler']
+                        );
+                        BackendEntityEditFormEvent::on(
+                            View::className(),
+                            'backend-page-edit-form',
+                            [$this, 'renderEditForm']);
+                    } elseif ($app->requestedAction->controller instanceof app\modules\shop\controllers\BackendProductController) {
+                        BackendEntityEditEvent::on(
+                            app\modules\shop\controllers\BackendProductController::className(),
+                            'backend-product-edit-save',
+                            [$this, 'saveHandler']
+                        );
+                        BackendEntityEditFormEvent::on(
+                            View::className(),
+                            'backend-product-edit-form',
+                            [$this, 'renderEditForm']);
+                    } elseif ($app->requestedAction->controller instanceof app\modules\shop\controllers\BackendCategoryController) {
+                        BackendEntityEditEvent::on(
+                            app\modules\shop\controllers\BackendCategoryController::className(),
+                            'backend-category-edit-save',
+                            [$this, 'saveHandler']
+                        );
+                        BackendEntityEditFormEvent::on(
+                            View::className(),
+                            'backend-category-edit-form',
+                            [$this, 'renderEditForm']);
+                    }
+                } else {
+                    if (
+                        $app->requestedAction->controller instanceof app\modules\shop\controllers\ProductController &&
+                        ($app->requestedAction->id == 'show' || $app->requestedAction->id == 'list' )
+                    ) {
+                        ViewEvent::on(
+                            app\modules\shop\controllers\ProductController::className(),
+                            app\modules\shop\controllers\ProductController::EVENT_PRE_DECORATOR,
+                            [$this, 'registerMeta']
+                        );
+                    } elseif (
+                        $app->requestedAction->controller instanceof app\modules\page\controllers\PageController &&
+                        $app->requestedAction->id == 'show'
+                    ) {
+                        ViewEvent::on(
+                            app\modules\page\controllers\PageController::className(),
+                            app\modules\page\controllers\PageController::EVENT_PRE_DECORATOR,
+                            [$this, 'registerMeta']
+                        );
+                    }
                 }
+
+
             }
         );
 

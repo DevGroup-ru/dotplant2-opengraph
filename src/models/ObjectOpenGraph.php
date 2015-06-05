@@ -31,7 +31,7 @@ class ObjectOpenGraph extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['object_id', 'object_model_id', 'title', 'description'], 'required'],
+            [['object_id', 'object_model_id', 'title', 'description'], 'required', 'enableClientValidation'=>false],
             [['object_id', 'object_model_id', 'active'], 'integer'],
             [['description'], 'string'],
             [['title', 'image'], 'string', 'max' => 255]
