@@ -55,32 +55,32 @@ class Module extends ExtensionModule implements BootstrapInterface
                     if ($app->requestedAction->controller instanceof app\modules\page\backend\PageController) {
                         BackendEntityEditEvent::on(
                             app\modules\page\backend\PageController::className(),
-                            'backend-page-edit-save',
+                            app\modules\page\backend\PageController::BACKEND_PAGE_EDIT_SAVE,
                             [$this, 'saveHandler']
                         );
                         BackendEntityEditFormEvent::on(
                             View::className(),
-                            'backend-page-edit-form',
+                            app\modules\page\backend\PageController::BACKEND_PAGE_EDIT_FORM,
                             [$this, 'renderEditForm']);
                     } elseif ($app->requestedAction->controller instanceof app\modules\shop\controllers\BackendProductController) {
                         BackendEntityEditEvent::on(
                             app\modules\shop\controllers\BackendProductController::className(),
-                            'backend-product-edit-save',
+                            app\modules\shop\controllers\BackendProductController::EVENT_BACKEND_PRODUCT_EDIT_SAVE,
                             [$this, 'saveHandler']
                         );
                         BackendEntityEditFormEvent::on(
                             View::className(),
-                            'backend-product-edit-form',
+                            app\modules\shop\controllers\BackendProductController::EVENT_BACKEND_PRODUCT_EDIT_FORM,
                             [$this, 'renderEditForm']);
                     } elseif ($app->requestedAction->controller instanceof app\modules\shop\controllers\BackendCategoryController) {
                         BackendEntityEditEvent::on(
                             app\modules\shop\controllers\BackendCategoryController::className(),
-                            'backend-category-edit-save',
+                            app\modules\shop\controllers\BackendCategoryController::BACKEND_CATEGORY_EDIT_SAVE,
                             [$this, 'saveHandler']
                         );
                         BackendEntityEditFormEvent::on(
                             View::className(),
-                            'backend-category-edit-form',
+                            app\modules\shop\controllers\BackendCategoryController::BACKEND_CATEGORY_EDIT_FORM,
                             [$this, 'renderEditForm']);
                     }
                 } else {
