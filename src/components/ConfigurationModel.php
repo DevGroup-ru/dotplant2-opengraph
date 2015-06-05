@@ -33,7 +33,7 @@ class ConfigurationModel extends BaseConfigurationModel
                 ],
             ],
             'bootstrap' => [
-                'OpenGraph',
+                'OpenGraph' => 'OpenGraph',
             ],
         ];
     }

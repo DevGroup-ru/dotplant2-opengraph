@@ -57,16 +57,35 @@ class Module extends ExtensionModule implements BootstrapInterface
                         [$this, 'saveHandler']
                     );
                     BackendEntityEditFormEvent::on(
-                        'yii\web\View',
+                        View::className(),
                         'backend-page-edit-form',
                         [$this, 'renderEditForm']);
+                } elseif ($app->requestedAction->controller instanceof app\modules\shop\controllers\BackendProductController) {
+                    BackendEntityEditEvent::on(
+                        app\modules\shop\controllers\BackendProductController::className(),
+                        'backend-product-edit-save',
+                        [$this, 'saveHandler']
+                    );
+                    BackendEntityEditFormEvent::on(
+                        View::className(),
+                        'backend-product-edit-form',
+                        [$this, 'renderEditForm']);
+                } elseif (
+                    $app->requestedAction->controller instanceof app\modules\shop\controllers\ProductController &&
+                    $app->requestedAction->id == 'show'
+                ) {
+                    ViewEvent::on(
+                        app\modules\shop\controllers\ProductController::className(),
+                        app\modules\shop\controllers\ProductController::EVENT_PRE_DECORATOR,
+                        [$this, 'registerMeta']
+                    );
                 } elseif (
                     $app->requestedAction->controller instanceof app\modules\page\controllers\PageController &&
                     $app->requestedAction->id == 'show'
                 ) {
                     ViewEvent::on(
-                        'yii\web\View',
-                        View::EVENT_BEFORE_RENDER,
+                        app\modules\page\controllers\PageController::className(),
+                        app\modules\page\controllers\PageController::EVENT_PRE_DECORATOR,
                         [$this, 'registerMeta']
                     );
                 }
@@ -87,8 +106,6 @@ class Module extends ExtensionModule implements BootstrapInterface
 
         if ($openGraph->save()) {
             Yii::$app->session->setFlash('info', 'Open Graph Save');
-        } else {
-            $model->errors = ArrayHelper::merge($model->errors, $openGraph->errors);
         }
 
 
@@ -115,7 +132,7 @@ class Module extends ExtensionModule implements BootstrapInterface
 
     public function registerMeta(ViewEvent $event)
     {
-        if (empty($event->params['model'])  || ! $event->params['model'] instanceof Page ) {
+        if (empty($event->params['model'])) {
             return null;
         }
 
@@ -124,7 +141,7 @@ class Module extends ExtensionModule implements BootstrapInterface
             app\modules\seo\helpers\HtmlTagHelper::registerOpenGraph(
                 $openGraph->title,
                 Yii::$app->request->absoluteUrl,
-                Yii::$app->request->hostInfo.$openGraph->image,
+                Yii::$app->request->hostInfo . $openGraph->image,
                 $openGraph->description
             );
         }
@@ -134,10 +151,16 @@ class Module extends ExtensionModule implements BootstrapInterface
     public static function loadModel($model, $createNew = true)
     {
 
+        $object = app\models\Object::getForClass($model::className());
+
+        if (!$object) {
+            return null;
+        }
+
         $openGraph = ObjectOpenGraph::find()
             ->where(
                 [
-                    'object_id' => $model->object->id,
+                    'object_id' => $object->id,
                     'object_model_id' => $model->id
                 ]
             )

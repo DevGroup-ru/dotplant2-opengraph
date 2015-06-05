@@ -1,5 +1,7 @@
 <?php
 use \app\backend\widgets\BackendWidget;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 /**
  * @var $form \app\backend\components\ActiveForm
@@ -18,8 +20,8 @@ use \app\backend\widgets\BackendWidget;
             'title',
             [
                 'copyFrom' => [
-                    "#page-title",
-                    "#page-breadcrumbs_label",
+                    "#".Html::getInputId($model, 'name'),
+                    "#".Html::getInputId($model, 'title'),
                 ]
             ]
         ) ?>
@@ -38,8 +40,8 @@ use \app\backend\widgets\BackendWidget;
             'description',
             [
                 'copyFrom' => [
-                    "#page-content",
-                    "#page-annonce",
+                    "#".Html::getInputId($model, 'content'),
+                    "#".Html::getInputId($model, 'annonce'),
                 ]
             ]
         )->textarea() ?>
