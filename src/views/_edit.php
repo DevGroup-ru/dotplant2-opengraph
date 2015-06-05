@@ -23,7 +23,16 @@ use \app\backend\widgets\BackendWidget;
                 ]
             ]
         ) ?>
-        <?= $form->field($openGraph, 'image') ?>
+        <?= $form->field(
+            $openGraph,
+            'image',
+            [
+                'copyFrom' => [
+                    '[name="file[]"]'
+                ]
+
+            ]
+        ) ?>
         <?= $form->field(
             $openGraph,
             'description',

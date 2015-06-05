@@ -124,7 +124,7 @@ class Module extends ExtensionModule implements BootstrapInterface
             app\modules\seo\helpers\HtmlTagHelper::registerOpenGraph(
                 $openGraph->title,
                 Yii::$app->request->absoluteUrl,
-                $openGraph->image,
+                Yii::$app->request->hostInfo.$openGraph->image,
                 $openGraph->description
             );
         }
